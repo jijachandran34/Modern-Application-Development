@@ -5,4 +5,4 @@ Flask-SQLAlchemy==2.5.1
 Jinja2==3.1.2
 jinja2-custom-filters-extension==0.0.2
 SQLAlchemy==1.4.45
-Werkzeug==2.2.2
+Werkzeug==3.0.6
