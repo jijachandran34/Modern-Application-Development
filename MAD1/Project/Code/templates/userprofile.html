@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+  <header>
+        <table style="width:100%;margin-left:1em" name="headertable" >
+          <tr>
+               
+            {% if session['user_name']  %}  
+              <td style="width:70%" >
+                Welcome {{ session['user_name']|capitalize }}
+              </td>    
+              <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+              <td><a href="/search">Search</a>&nbsp;&nbsp;</td>
+              <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+            {% else %}
+            <td style="width:70%">
+              <h3>Welcome Guest</h3>
+            </td>
+              <td><a href="/login">Sign In</a></td>
+              <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+            {% endif %}
+          </tr>
+        </table>
+    </header>
+    <br>
+    {% if session['user_name']  %} 
+    <form id="userprofileform" style="margin-left:1em">
+      <div class="form-group row">
+        <h5 class="col-sm-2 col-form-label">{{ user.username|capitalize }}'s Profile</h5>
+        {% if session['user_id'] == user.id %}  
+          <a href="/{{ session['user_id'] }}/createpost" class="action" width="100">New post</a> 
+        {% endif %}
+      </div>
+      <br>
+      <table id="userprofileStat">
+        <tr>
+          <td width="100px">
+              Total Posts
+              <p style="margin-left:1em"></pstyle>{{ postcount }}</p>
+            </td>
+            <td width="100px">
+              Followers
+              {% if session['user_id'] == user.id %}  
+                <p><a href="/followers">{{ followercount }}</a></p>
+              {% else %}
+                <p>{{ followercount }} </p>
+              {% endif %}
+            </td>
+            <td>
+              Following 
+              {% if session['user_id'] == user.id %}  
+                <p><a href="/following">{{ followingcount }} </a></p>
+              {% else %}
+                <p>{{ followingcount }} <p>
+              {% endif %}
+            </td>
+        </tr>
+      </table>
+      
+      <h6>Posts</h6>
+      
+      <table class="table table-hover">
+        {% for post in posts %}
+          {% if session['user_id'] == user.id %}
+              <tr>
+              <td>
+                <article class ="post">
+                  {% if post.image is not none %}
+                  <img src='{{ url_for("static", filename="images/" + post.image ) }}' width="50", height="50"/>
+                  {% endif %}
+                  &nbsp;<a style="font-weight:bold" href='/displaypost/{{user.id}}/{{ post.id }}'class="about">{{ post["title"] }}</a>
+                  <p></p>
+                  <a href='/delete/{{user.id}}/{{ post.id }}' onclick="return confirm('Are you sure to delete the post?')" class="action">Delete</a>
+                  <a href='/modify/{{user.id}}/{{ post.id }}' class="action">Modify</a>
+                  <p></p>
+                </article>
+              </td>
+              </tr>
+            {% else %}
+            
+              {% if post.status != 'Private' %}
+              <tr>
+                <td>
+                  <article class ="post">
+                    {% if post.image is not none %}
+                    <img src='{{ url_for("static", filename="images/" + post.image ) }}' width="50", height="50"/>
+                    {% endif %}
+                    &nbsp;<a style="font-weight:bold" href='/displaypost/{{user.id}}/{{ post.id }}'class="about">{{ post["title"] }}</a>
+                    
+                    
+                  </article>
+                </td>
+              </tr>
+              {% endif %}
+              
+          {% endif %}
+        {% endfor %}
+        
+      </table>
+            
+   {% endif %} 
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Modify post</title>
+        
+	</head>
+		<body>
+            <header>
+              <table style="width:100%;margin-left:1em" name="headertable">
+                  <tr>
+                       
+                    {% if session['user_name']  %}  
+                      <td style="width:70%">
+                        Welcome {{ session['user_name']|capitalize }}
+                      </td>    
+                      <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+                      <td><a href="/search">Search</a>&nbsp;&nbsp;</td>
+                      <td><a href="/{{ session['user_id'] }}/userprofile">My Profile</a>&nbsp;&nbsp;</td>
+                      <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+                    {% else %}
+                    <td style="width:70%">
+                      <h3>Welcome Guest</h3>
+                    </td>
+                      <td><a href="/login">Sign In</a></td>
+                      <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+                    {% endif %}
+                  </tr>
+                </table>
+            </header> 
+            {% if session['user_name'] %}  
+            <form method="POST" id="editpostform" enctype="multipart/form-data">  
+                
+                    {% if post is defined %}
+                        <div style="margin-left:1em">
+                          <h5>Post By :<a href='/{{ user.id }}/userprofile'>{{ user.username }}</a></h5>
+                          <label>Title:</label>
+                          <input type="text" name="postTitle" value="{{ post.title}}" required style="width : 500px;"/>
+                      
+                    
+                          <p class="lead">{{ post.created_on }}</p>
+                          <!-- <p class="lead">{{ post.content }}</p> -->
+                          <textarea name="postContent" required style="height: 70px;width : 500px;" class="form-control">{{ post.content }}</textarea>
+                      
+                          <br>
+                          {% if post.image is not none %}
+                          <div><img src='{{ url_for("static", filename="images/" + post.image ) }}' width="200", height="200"/></div>
+                          {% endif %}
+                          <br>
+                          <label>Change Image:</label>
+                          
+                          <input type = "file" name = "imagefile" id="imagefile" onchange="showImage();" accept="image/gif, image/jpeg, image/png"/>
+                          <div id="postImage" width ="50" <style display: block;></div>
+                        </div>
+                        <br>
+                        <label>Private</label>
+                        {% if  post.status  == 'Private' %}
+                        <input type="checkbox" id="poststatus" name="poststatus" value='{{ post.status }}' checked />
+				                {% else %}
+                        <input type="checkbox" id="poststatus" name="poststatus" value='{{ post.status }}' />
+                        {% endif %}
+                            <br>
+                                <input type="submit" value = "Save" class="btn btn-primary" width="100">&nbsp;&nbsp;
+                                <p></p>
+                                <a href='/{{ user.id }}/userprofile'  class="action" style="display: inline-block; width:150px;">Go Back</a>
+                               
+                    {% endif %} 
+            
+            </form>
+            {% endif %}
+            <script>
+                const selfile = document.getElementById("imagefile")
+                const imgshow = document.getElementById("postImage")
+                selfile.addEventListener("change",function(){
+                    showImage();
+                });
+                function showImage(){
+                    if (selfile.files[0]){
+                        const fileR = new FileReader();
+                        fileR.readAsDataURL(selfile.files[0]);
+                        fileR.addEventListener("load",function(){
+                            imgshow.innerHTML = '<img src="' + this.result + '" /width="200", height="200">';
+                        })
+                        
+                    }
+
+                }
+            </script>
+		</body>
+</html>

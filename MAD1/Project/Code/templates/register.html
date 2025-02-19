@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+       
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+        <head>
+                <meta charset="UTF-8"/>
+                <title>Register</title>
+        </head>
+        <body class="text-center">
+                <p></p>
+                <h2 class="h3 mb-3 font-weight-normal"> Sign up to Bloglite </h2>
+                <form method="POST" id="registerform" class=""form-signin>  
+                        <label for="username" class="sr-only">Username</label>
+                        <input id= "username" type="text" name="username" required class="textbox" class="textbox"/>
+                        <p></p>
+                        <label for="password" class="sr-only">Password</label>
+                        <input id ="password" type="password" name="password" required class="textbox"/><br>
+                        <br>
+                        <input type="submit" value ="Sign Up" class="btn btn-primary "><br>
+                        <a href="/login">Already have an account ? Login</a>
+
+                </form>
+                <br>
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
+        </body>
+</html>

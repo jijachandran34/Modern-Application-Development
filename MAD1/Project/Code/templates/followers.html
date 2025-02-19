@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Followers</title>
+</head>
+<body>
+    <header>
+      <table style="width:100%;margin-left:1em" name="headertable" >
+          <tr>
+               
+            {% if session['user_name']  %}  
+              <td style="width:70%">
+                Welcome {{ session['user_name']|capitalize }}
+              </td>    
+              <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+              <td><a href="/search">Search</a>&nbsp;&nbsp;</td>
+              <td><a href="/{{ session['user_id'] }}/userprofile">My Profile</a>&nbsp;&nbsp;</td>
+              <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+            {% else %}
+            <td style="width:70%">
+              <h3>Welcome Guest</h3>
+            </td>
+              <td><a href="/login">Sign In</a></td>
+              <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+            {% endif %}
+          </tr>
+        </table>
+    </header>
+    <br>
+    
+    {% if session['user_name'] %}  
+    <table style="margin-left:1em" class="table table-hover">
+      <h5 style="margin-left:1em">Your followers</h5> 
+          {% for user in users %}
+            <tr>
+              <td>
+                  <a href='/{{ user["id"] }}/userprofile' class="action">{{ user["username"] }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+      </table>
+    {% endif %}
+    <a href='/{{ session["user_id"] }}/userprofile' class="action" style="display: inline-block; width:150px;margin-left:1.5em">Go Back</a>
+</body>
+</html>

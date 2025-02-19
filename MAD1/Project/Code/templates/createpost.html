@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/> -->
+	
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <head>
+		<meta charset="UTF-8"/>
+		<title>Create a new post</title>
+        
+	</head>
+		<body>
+            <header>
+                <table style="width:100%;margin-left:1em" name="headertable">
+                  <tr>
+                    {% if session['user_name']  %} 
+                     
+                      <td style="width:70%">
+                        Welcome {{ session['user_name']|capitalize }}
+                      </td>    
+                      <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+                      <td><a href="/search">Search</a>&nbsp;&nbsp;</td>
+                      <td><a href="/{{ session['user_id'] }}/userprofile">My Profile</a>&nbsp;&nbsp;</td>
+                      <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+                    {% else %}
+                    <td style="width:70%">
+                      <h3>Welcome Guest</h3>
+                    </td>
+                      <td><a href="/login">Sign In to BlogLite</a></td>
+                      <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+                    {% endif %}
+                  </tr>
+                </table>
+            </header> 
+            {% if session['user_name'] %}  
+            <br>
+            <h4 style="margin-left:1em">Add a New Post</h4> 
+            
+			<form method="POST" id="create-post-form" enctype="multipart/form-data" style="margin-left:1em">
+                <div class="form-group">
+                    <label for="postTitle">Title:</label>
+                    <br>
+                    <input type="text" name="postTitle" id="postTitle" required class="form-control" placeholder="Post title"/>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postContent">Content:</label>
+                    <br>
+                    <textarea name="postContent" id="postContent" required class="form-control"  placeholder="Post Content"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imagefile" >Select Post Image </label>
+                    <input type = "file" name = "imagefile" class="form-control-file" id="imagefile" required onchange="showImage();" accept="image/gif, image/jpeg, image/png"/>
+                    <br>
+                    <div id="postImage" width ="50" <style display: block;/></div>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Public" id="poststatus" >
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Private
+                    </label>
+                </div>
+                <br>
+                <div>
+                    <input type="submit" value = "Save" class="btn btn-primary">
+                </div>
+                
+            </form>
+            
+            {% endif %}
+            <script>
+                const selfile = document.getElementById("imagefile")
+                const imgshow = document.getElementById("postImage")
+                selfile.addEventListener("change",function(){
+                    showImage();
+                });
+                function showImage(){
+                    if (selfile.files[0]){
+                        const fileR = new FileReader();
+                        fileR.readAsDataURL(selfile.files[0]);
+                        fileR.addEventListener("load",function(){
+                            imgshow.innerHTML = '<img src="' + this.result + '" /class="img-thumbnail">';
+                        })
+                        
+                    }
+
+                }
+            </script>
+		</body>
+</html>

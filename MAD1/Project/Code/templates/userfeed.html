@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User feed</title>
+</head>
+<body>
+    <header>
+        <table style="width:100%;margin-left:1em" name="headertable">
+        <tr>
+            
+            {% if session['user_name']  %}  
+            <td style="width:70%">
+                Welcome {{ session['user_name']|capitalize }}
+            </td>    
+            <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+            <td><a href="/search">Search</a>&nbsp;&nbsp;</td>
+            <td><a href="/{{ session['user_id'] }}/userprofile">My Profile</a>&nbsp;&nbsp;</td>
+            <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+            {% else %}
+            <td style="width:70%">
+            <h3>Welcome Guest</h3>
+            </td>
+            <td><a href="/login">Sign In</a></td>
+            <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+            {% endif %}
+        </tr>
+        </table>
+    </header> 
+    
+    <a href="/{{ session['user_id'] }}/createpost" class="action" width="100" style="margin-left:1em">New post</a>
+    <p></p>
+    {% if session['user_name']  %}  
+        {% if feeds is defined and feeds|length > 0 %}
+        
+            {% for key, value in feeds.items() %}
+                
+                <p></p>
+                <h6 style="margin-left:1em">Posts By :<a href='/{{ key[0]|e }}/userprofile'>{{ key[1]|e }}</a></h6>
+                    
+                    <table name="userfeed" class="table table-hover">
+                    <tbody >
+                        {% for v in value|sort(attribute = 'created_on', reverse = True) %}
+                            
+                            {% if v.status != 'Private' %}
+                                <tr>
+                                <td>
+                                    
+                                        {% if v.image is not none %}
+                                        <img src='{{ url_for("static", filename="images/" + v.image ) }}' width="75", height="75"/>
+                                        {% endif %}
+                                        <a style="font-weight:bold" href='/displaypost/{{ key[0]|e }}/{{ v.id|e }}' class="about">{{ v.title|e }}</a>
+                                   
+                                </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                  
+                            
+            {% endfor %}
+            <p></p
+    
+        {% else %}
+           
+            <div  style="margin-left:1em">
+                <p> There are no posts in your feed !</p>
+                <p> Connect with other users to see what they are posting</p>
+                <a href="/search" align="center">Follow Others</a>
+            </div>
+        
+        {% endif %} 
+    {% else %}
+        <a href="/login">Sign In</a>
+    {% endif %}  
+    
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Users</title>
+</head>
+<body>
+    
+        <header>
+            <table style="width:100%;margin-left:1em" name="headertable">
+                <tr>
+                    {% if session['user_name']  %}  
+                    <td style="width:70%">
+                        Welcome {{ session['user_name']|capitalize }}
+                    </td>    
+                    <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+                    <td><a href="/{{ session['user_id'] }}/userprofile">My Profile</a>&nbsp;&nbsp;</td>
+                    <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+                    {% else %}
+                    <td style="width:70%">
+                    <h3>Welcome Guest</h3>
+                    </td>
+                    <td><a href="/login">Sign In</a></td>
+                    <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </header> 
+        <br>
+        {% if session['user_name'] %}  
+            
+            <form id="seachform" class="form-search" style="margin-left:1em" method="POST">  
+                <div class="form-search">
+                    <input type="text" id="searchtxt" name="searchtxt" width="450px" >
+                    <input type="submit" value = "Search" class="btn btn-primary">
+                </div> 
+                <br> 
+            </form>           
+                
+                
+                <form id="searchresults" class="form-search" style="margin-left:1em">
+                    {% if users is defined and users|length > 0 %}
+                    <h6>Search Results</h6>
+                    <table id="resulttbl" class="table table-hover">
+                    
+                    {% for user in users %}
+                    <tr>
+                        <td width="250">                            
+                            <a href='/{{ user["id"] }}/userprofile' class="action" >{{ user["username"] }}</a>
+                            <td>
+                            {% if not user.id in following %}
+                                <a href='/follow/{{ user.id }}' class="action" width="150">Follow</a>    
+                            {% else %}
+                                <a href='/unfollow/{{ user.id }}' class="action" width="150">Unfollow</a>
+                            {% endif %}
+                            </td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+                </form>
+                
+                {% if users is defined and users|length == 0 %}
+                    <div> There is no users matching the search. </div>
+                {% endif %}
+            
+        {% else %}
+            <a href="/login">Sign In</a>
+        {% endif %}  
+</body>
+</html>

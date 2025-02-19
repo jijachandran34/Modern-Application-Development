@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
+	<head>
+      <meta charset="UTF-8"/>
+      <title>Welcome To Bloglite</title>
+	</head>
+		<body>
+      <header>
+        <table style="width:100%" name="headertable">
+          <tr>
+               
+            {% if session['user_name']  %}  
+              <td style="width:70%">
+                Welcome {{ session['user_name']|capitalize }}
+              </td>    
+              <td><a href="/userfeed">Home</a>&nbsp;&nbsp;</td>
+              <td><a href="/search">Search</a>&nbsp;&nbsp;</td>
+              <td><a href="/{{ session['user_id'] }}/userprofile">My Profile</a>&nbsp;&nbsp;</td>
+              <td><a href="/logout">Sign Out</a>&nbsp;&nbsp;</td>
+            {% else %}
+            <td style="width:70%"><h3>Welcome Guest</h3></td>
+              <td><a href="/login">Sign In</a></td>
+              <td><a href="/register">Sign Up</a>&nbsp;&nbsp;</td>
+            {% endif %}
+          </tr>
+        </table>
+    </header> 
+     </body>
+    </html>
+               
